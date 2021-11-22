@@ -10,23 +10,24 @@ import alias from "@rollup/plugin-alias";
 
 const production = !process.env.ROLLUP_WATCH;
 
-function serve()
-{
+function serve() {
     let server;
 
-    function toExit()
-    {
+    function toExit() {
         if (server) server.kill(0);
     }
 
     return {
-        writeBundle()
-        {
+        writeBundle() {
             if (server) return;
-            server = child_process.spawn("npm", ["run", "start", "--", "--dev"], {
-                stdio: ["ignore", "inherit", "inherit"],
-                shell: true
-            });
+            server = child_process.spawn(
+                "npm",
+                ["run", "start", "--", "--dev"],
+                {
+                    stdio: ["ignore", "inherit", "inherit"],
+                    shell: true
+                }
+            );
 
             process.on("SIGTERM", toExit);
             process.on("exit", toExit);
@@ -45,10 +46,13 @@ export default {
     plugins: [
         alias({
             entries: {
-                vue: "./node_modules/vue/dist/vue.runtime.esm-browser" + (production ? ".prod" : "") + ".js"
+                vue:
+                    "./node_modules/vue/dist/vue.runtime.esm-browser" +
+                    (production ? ".prod" : "") +
+                    ".js"
             }
         }),
-        vue({ }),
+        vue({}),
         // we'll extract any component CSS out into
         // a separate file - better for performance
         css({ output: "index.css" }),
